@@ -55,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
         // 앱바의 옵션 버튼을 누를 경우 mainmenu.xml의 레이아웃을 보여줌
         MenuInflater inflater = getMenuInflater();
@@ -83,5 +80,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
