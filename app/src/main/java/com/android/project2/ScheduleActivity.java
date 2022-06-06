@@ -36,32 +36,26 @@ import java.util.Locale;
 // 일정을 생성/수정/삭제하기 위한 액티비티
 public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    // 수정할 일정의 _id값, 디폴트는 -1
-    private int _id;
-    // 수정할 일정 객체
-    private Schedule schedule;
-
     // 수정하는 연도 ,월,일
     private int year;
     private int month;
     private int date;
-    // 제목
+
     private EditText titleEditText;
-    // 시작시간
+
     private TimePicker startPicker;
-    // 종료시간
+
     private TimePicker endPicker;
-    // 지역
+
     private EditText placeEditText;
-    // 메모
+
     private EditText memoEditText;
 
-    // 장소 검색 버튼
+
     private Button placeFindButton;
-    // 구글지도
+
     GoogleMap mGoogleMap = null;
-    // 구글지도 좌표
-    private Geocoder geocoder;
+    private Geocoder geocoder;//구글 지도 좌표를 위한...
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +64,11 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         // default 날짜 설정을 위한 캘린더 객체
         Calendar calendar = Calendar.getInstance();
 
-        // 인텐트 선언 및 year, month, date, _id값 전달 받음
+        // 인텐트 선언 및 year, month, date 값 전달
         Intent intent = getIntent();
         year = intent.getIntExtra("year", -1);
         month = intent.getIntExtra("month", -1);
         date = intent.getIntExtra("date", -1);
-        _id = intent.getIntExtra("_id", -1);
 
         // 각 입력 필드 수정
         titleEditText = findViewById(R.id.schedule_title);
