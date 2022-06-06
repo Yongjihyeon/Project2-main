@@ -3,7 +3,6 @@ package com.android.project2;
 public class DateInfo {
 
     private static final DateInfo instance = new DateInfo();
-
     // 연,월,일,시간
     // 기본값은 -1
     private int year;
