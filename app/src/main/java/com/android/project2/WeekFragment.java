@@ -26,6 +26,8 @@ public class WeekFragment extends Fragment {
     private int[] sevendays;//현재 주의 날짜들을 저장하는 배열
     private String[] schedules;// 일정 데이터가 들어갈 배열
 
+    private String[] titles;
+
     private TextView block;
     //linearlayout내부의 textview를 선택하려면 block이 선택 되었을 때 선택된다.
     //다른 block을 선택하면 이전의 block은 다시 흰색이 되기 때문에 이전의 블록을 block변수에 저장

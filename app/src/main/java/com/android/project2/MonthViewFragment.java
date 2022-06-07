@@ -1,5 +1,10 @@
 package com.android.project2;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -51,6 +56,15 @@ public class MonthViewFragment extends Fragment {
     private TextView block; //이전에 선택된 textview를 저장하는 변수
     ArrayList<String> daylist;//날짜 저장 리스트
 
+    //db
+    final static String TAG = "SQLITEDBTEST";
+    private CalendarDBHelper mDbHelper;
+    String scheduleName;
+
+    //dialog 출력
+    AlertDialog.Builder builder;
+    String[] titles;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +72,11 @@ public class MonthViewFragment extends Fragment {
             //프래그먼트가 생성됐을 때 전달받은 변수 초기화
             year = getArguments().getInt(ARG_PARAM1);
             month = getArguments().getInt(ARG_PARAM2);
+
+            mDbHelper = new CalendarDBHelper(getContext());
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,11 +95,10 @@ public class MonthViewFragment extends Fragment {
         final Date date = new Date(now); //date 객체 생성
 
 
-
         Calendar calendar = Calendar.getInstance();
 
         mCalendar = Calendar.getInstance();
-        mCalendar.set(year,month,1);
+        mCalendar.set(year, month, 1);
 
         daylist = new ArrayList<String>();
         setCalendar(year, month); //daylist를 초기화 히면서 year, month 정보를 넣는다.
@@ -103,8 +119,11 @@ public class MonthViewFragment extends Fragment {
                 //이전에 클릭된 textview는 배경색을 WHITE로 변경
                 block.setBackgroundColor(Color.WHITE);
                 block = tv;
+                scheduleName = (year+"/"+month+"/"+(position-firstday+1)).toString();
                 //현재 클릭된 textview의 년,월 정보 출력
                 Toast.makeText(getActivity(), (year) + "/" + (month + 1) + "/" + (position - firstday + 1), Toast.LENGTH_SHORT).show();
+                //viewTitleTextView();
+                showDialog();
             }
         });
         // 어댑터를 설정
@@ -113,7 +132,7 @@ public class MonthViewFragment extends Fragment {
         return v;
     }
 
-    private void setCalendar(int year, int month){
+    private void setCalendar(int year, int month) {
         //매달 첫날의 요일, 마지막날이 30일인지 31인지를 판별
         Calendar calendar = Calendar.getInstance(); //calendar 객체
         //입력받은 각각의 연도 달을 설정
@@ -125,13 +144,14 @@ public class MonthViewFragment extends Fragment {
         //convertview, daylist는 모두 0부터 시작하니 Calendar.DAY_OF_WEEK과 맞추기 위해 -1을 해준다
         lastday = calendar.getActualMaximum(Calendar.DATE);
         // 마지막날은 해당 달의 최대값
-        for (int i=0; i<6*7; i++) { // 7행6열의 리스트를 만든다
-            if ( i < firstday || i > (lastday + firstday - 1)) daylist.add("");
+        for (int i = 0; i < 6 * 7; i++) { // 7행6열의 리스트를 만든다
+            if (i < firstday || i > (lastday + firstday - 1)) daylist.add("");
                 // 첫날보다 작거나, 마지막날보다 크면 공백으로해줌
             else //그렇지 않으면 첫날부터 마지막날까지 써줌
                 daylist.add("" + (i - firstday + 1));
         }
     }
+
     class GridAdapter extends BaseAdapter {
         private final List<String> list;
         private final LayoutInflater inflater;
@@ -141,10 +161,12 @@ public class MonthViewFragment extends Fragment {
             this.list = list;
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
+
         @Override
         public int getCount() {//리스트 크기 반환
             return list.size();
         }
+
         @Override
         public String getItem(int position) {//리스트 해탕 위치에 날짜 반환
             return list.get(position);
@@ -167,8 +189,7 @@ public class MonthViewFragment extends Fragment {
                 // holder의 TextView객체에 calendar_gridview.xml의 텍스트뷰를 연결한다
                 convertView.setTag(holder);
                 // convertView하나마다의 태그에 둘을 연결하기위해 태그를 holder로 설정.
-            }
-            else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
                 //convertview의 태그를 가져와 holder에 초기화한다. 따라서 holder는 convertview의 태그가 된다.
             }
@@ -187,20 +208,22 @@ public class MonthViewFragment extends Fragment {
             holder.tvItemGridView.setTextColor(color);
 
             //각 textview의 높이와 폭 설정
-            holder.tvItemGridView.setHeight((h/7));
-            holder.tvItemGridView.setWidth(w/7);
+            holder.tvItemGridView.setHeight((h / 6));
+            holder.tvItemGridView.setWidth(w / 7);
 
             //block 초기화
             TextView tv = (TextView) convertView.findViewById(R.id.item_gridview);
-            if(position==0)
+            if (position == 0)
                 block = tv;
 
             return convertView;
         }
     }
+
     public class ViewHolder {// ViewHolder 클래스(태그에 쓰일 클래스)
         TextView tvItemGridView;
     }
+
     public static MonthViewFragment newInstance(int year, int month) {
         MonthViewFragment fragment = new MonthViewFragment();
 
@@ -211,4 +234,39 @@ public class MonthViewFragment extends Fragment {
 
         return fragment;
     }
+
+    public void showDialog() {
+        builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(year+"년"+(month+1)+"월");
+
+        /*Cursor cursor = mDbHelper.getTitleBySQL();
+        StringBuffer buffer = new StringBuffer();
+        int i=0;
+        while (cursor.moveToNext()) {
+            titles[i] = cursor.getString(2).toString();
+            i++;
+        }*/
+        //viewTitleTextView();
+        titles = new String[]{"and1", "and2"};
+        Intent intent = new Intent(getContext(), ScheduleActivity.class);
+        builder.setItems(titles, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                intent.putExtra("title", titles[which]);
+                startActivity(intent);
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+/*    private void viewTitleTextView() {
+        Cursor cursor = mDbHelper.getTitleBySQL();
+
+        StringBuffer buffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            buffer.append(cursor.getString(2));
+        }
+        titles = buffer.toString();
+    }*/
 }

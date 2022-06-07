@@ -57,7 +57,16 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
     GoogleMap mGoogleMap = null;
     private Geocoder geocoder;//구글 지도 좌표를 위한...
 
-    @Override
+    //db 관련 선언
+    final static String TAG="SQLITEDBTEST";
+    private CalendarDBHelper mDbHelper;
+    String dbName;
+
+    //다이어로그
+    AlertDialog.Builder builder;
+    String[] check;
+
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
@@ -97,6 +106,14 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         endPicker.setCurrentHour(endHour);
         endPicker.setCurrentMinute(0);
 
+        //db
+       mDbHelper = new CalendarDBHelper(this);
+
+       //제목 표시
+       Intent schedule_activity= getIntent();
+       titleEditText.setText(schedule_activity.getStringExtra("title"));
+
+
         // 저장, 취소, 삭제 버튼
         Button saveButton = findViewById(R.id.schedule_save_btn);
         Button cancelButton = findViewById(R.id.schedule_cancel_btn);
@@ -106,7 +123,8 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                viewAllToTextView();
+                insertRecord();
             }
         });
 
@@ -122,7 +140,8 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showDialog();
+                //viewAllToTextView();
             }
         });
 
@@ -134,7 +153,6 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         });
 
     }
-
 
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -204,5 +222,54 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
             }
         });
+    }
+    private void deleteRecord() {
+        //dbName으로 일정을 구별함
+
+        dbName = year + "/" + month + "/" + date;
+        mDbHelper.deleteUserBySQL(dbName.toString());
+    }
+
+    private void insertRecord() {
+        mDbHelper.insertUserBySQL(dbName.toString(),
+                titleEditText.getText().toString(),
+                startPicker.getCurrentHour().toString(),
+                endPicker.getCurrentHour().toString(),
+                placeEditText.getText().toString(),
+                memoEditText.getText().toString());
+    }
+    private void viewAllToTextView() {
+
+        Cursor cursor = mDbHelper.getTitleBySQL();
+
+        StringBuffer buffer = new StringBuffer();
+        while (cursor.moveToNext()) {
+            buffer.append(cursor.getInt(0)+" \t");
+            buffer.append(cursor.getString(1)+" \t");
+            buffer.append(cursor.getString(2)+" \t");
+            buffer.append(cursor.getString(3)+" \t");
+            buffer.append(cursor.getString(4)+" \t");
+            buffer.append(cursor.getString(5)+" \t");
+            buffer.append(cursor.getString(6)+"\n");
+        }
+        memoEditText.setText(buffer);
+    }
+
+    public void showDialog() {
+       check = new String[]{"네", "아니오"};
+       builder = new AlertDialog.Builder(ScheduleActivity.this);
+       builder.setTitle("취소하시겠습니까?");
+
+        builder.setItems(check, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(check[which]=="네")
+                    deleteRecord();
+                if(check[which]=="아니오")
+                    ScheduleActivity.this.finish();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
