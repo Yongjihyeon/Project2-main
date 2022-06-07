@@ -61,6 +61,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
     final static String TAG="SQLITEDBTEST";
     private CalendarDBHelper mDbHelper;
     String dbName;
+    String title;
 
     //다이어로그
     AlertDialog.Builder builder;
@@ -78,6 +79,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         year = intent.getIntExtra("year", -1);
         month = intent.getIntExtra("month", -1);
         date = intent.getIntExtra("date", -1);
+        title = intent.getStringExtra("title");
 
         // 각 입력 필드 수정
         titleEditText = findViewById(R.id.schedule_title);
@@ -97,6 +99,10 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         // endHour는 startHour의 1시간 뒤
         int endHour = (startHour + 1) % 24;
 
+
+        //if(title == "and1" || title =="and2")
+        //    titleEditText.setText(intent.getStringExtra("title"));
+        //else
         titleEditText.setText(String.format(Locale.KOREA, "%d년 %d월 %d일 %d시", year, month + 1, date, startHour));
 
         // 시작 시간은 현재 시간, 종료 시간은 거기서 +1한 시간으로 설정
@@ -108,10 +114,6 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
 
         //db
        mDbHelper = new CalendarDBHelper(this);
-
-       //제목 표시
-       Intent schedule_activity= getIntent();
-       titleEditText.setText(schedule_activity.getStringExtra("title"));
 
 
         // 저장, 취소, 삭제 버튼

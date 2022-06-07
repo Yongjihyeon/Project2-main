@@ -1,5 +1,6 @@
 package com.android.project2;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -65,6 +66,8 @@ public class MonthViewFragment extends Fragment {
     AlertDialog.Builder builder;
     String[] titles;
 
+    Intent intent;
+    Intent intent2;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,11 +122,16 @@ public class MonthViewFragment extends Fragment {
                 //이전에 클릭된 textview는 배경색을 WHITE로 변경
                 block.setBackgroundColor(Color.WHITE);
                 block = tv;
-                scheduleName = (year+"/"+month+"/"+(position-firstday+1)).toString();
+                scheduleName = (year+"/"+month+"/"+(position - firstday + 1)).toString();
                 //현재 클릭된 textview의 년,월 정보 출력
                 Toast.makeText(getActivity(), (year) + "/" + (month + 1) + "/" + (position - firstday + 1), Toast.LENGTH_SHORT).show();
-                //viewTitleTextView();
-                showDialog();
+                intent = new Intent(getContext(), MainActivity.class);
+                intent.putExtra("year", year);
+                intent.putExtra("month", (month));
+                intent.putExtra("date", (position - firstday + 1));
+                startActivity(intent);
+                //intent2 = new Intent(getContext(), ScheduleActivity.class);
+                //showDialog();
             }
         });
         // 어댑터를 설정
@@ -248,12 +256,11 @@ public class MonthViewFragment extends Fragment {
         }*/
         //viewTitleTextView();
         titles = new String[]{"and1", "and2"};
-        Intent intent = new Intent(getContext(), ScheduleActivity.class);
         builder.setItems(titles, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 intent.putExtra("title", titles[which]);
-                startActivity(intent);
+                startActivity(intent2);
             }
         });
         AlertDialog alertDialog = builder.create();

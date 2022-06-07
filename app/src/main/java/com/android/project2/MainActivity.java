@@ -24,10 +24,19 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static Fragment fragment;
+    int year;
+    int month;
+    int date;
+    int hour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //fragment로부터 년,월,일 정보를 받아와 플로팅 버튼을 실행할때 ScheduleActivity를 실행할 때 값 전달
+        Intent intent = getIntent();
+        year = intent.getIntExtra("year", -1);
+        month = intent.getIntExtra("month", -1);
+        date = intent.getIntExtra("date", -1);
 
         getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, new MonthFragment()).commit();
 
@@ -38,12 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 // ScheduleActivity를 띄우기 위한 intent 생성
                 Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
 
-                // DateInfo 클래스로부터 연,월,일,시간 정보 가져옴
-                DateInfo dateInfo = DateInfo.getInstance();
-                int year = dateInfo.getYear();
-                int month = dateInfo.getMonth();
-                int date = dateInfo.getDate();
-                int hour = dateInfo.getHour();
+                if(year==-1 && month==-1 && date==-1) {
+                    // DateInfo 클래스로부터 연,월,일,시간 정보 가져옴
+                    DateInfo dateInfo = DateInfo.getInstance();
+                    year = dateInfo.getYear();
+                    month = dateInfo.getMonth();
+                    date = dateInfo.getDate();
+                    hour = dateInfo.getHour();
+                }
 
                 // intent에 추가
                 intent.putExtra("year", year);
