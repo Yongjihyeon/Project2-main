@@ -124,14 +124,13 @@ public class MonthViewFragment extends Fragment {
                 block = tv;
                 scheduleName = (year+"/"+month+"/"+(position - firstday + 1)).toString();
                 //현재 클릭된 textview의 년,월 정보 출력
+                showDialog();
                 Toast.makeText(getActivity(), (year) + "/" + (month + 1) + "/" + (position - firstday + 1), Toast.LENGTH_SHORT).show();
-                intent = new Intent(getContext(), MainActivity.class);
+                /*intent = new Intent(getContext(), MainActivity.class);
                 intent.putExtra("year", year);
                 intent.putExtra("month", (month));
                 intent.putExtra("date", (position - firstday + 1));
-                startActivity(intent);
-                //intent2 = new Intent(getContext(), ScheduleActivity.class);
-                //showDialog();
+                startActivity(intent);*/
             }
         });
         // 어댑터를 설정
@@ -246,20 +245,12 @@ public class MonthViewFragment extends Fragment {
     public void showDialog() {
         builder = new AlertDialog.Builder(getContext());
         builder.setTitle(year+"년"+(month+1)+"월");
-
-        /*Cursor cursor = mDbHelper.getTitleBySQL();
-        StringBuffer buffer = new StringBuffer();
-        int i=0;
-        while (cursor.moveToNext()) {
-            titles[i] = cursor.getString(2).toString();
-            i++;
-        }*/
-        //viewTitleTextView();
         titles = new String[]{"and1", "and2"};
+        intent2 = new Intent(getContext(), ScheduleActivity.class);
         builder.setItems(titles, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                intent.putExtra("title", titles[which]);
+                intent2.putExtra("title", titles[which]);
                 startActivity(intent2);
             }
         });
@@ -267,13 +258,5 @@ public class MonthViewFragment extends Fragment {
         alertDialog.show();
     }
 
-/*    private void viewTitleTextView() {
-        Cursor cursor = mDbHelper.getTitleBySQL();
 
-        StringBuffer buffer = new StringBuffer();
-        while (cursor.moveToNext()) {
-            buffer.append(cursor.getString(2));
-        }
-        titles = buffer.toString();
-    }*/
 }

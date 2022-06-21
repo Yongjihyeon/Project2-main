@@ -100,11 +100,10 @@ public class ScheduleActivity extends AppCompatActivity implements OnMapReadyCal
         int endHour = (startHour + 1) % 24;
 
 
-        //if(title == "and1" || title =="and2")
-        //    titleEditText.setText(intent.getStringExtra("title"));
+        //
+            titleEditText.setText(intent.getStringExtra("title"));
         //else
-        titleEditText.setText(String.format(Locale.KOREA, "%d년 %d월 %d일 %d시", year, month + 1, date, startHour));
-
+           // titleEditText.setText(String.format(Locale.KOREA, "%d년 %d월 %d일 %d시", year, month + 1, date, startHour));
         // 시작 시간은 현재 시간, 종료 시간은 거기서 +1한 시간으로 설정
         startPicker.setCurrentHour(startHour);
         startPicker.setCurrentMinute(0);

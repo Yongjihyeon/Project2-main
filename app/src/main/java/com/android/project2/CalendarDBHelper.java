@@ -28,19 +28,19 @@ public class CalendarDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertUserBySQL(String name, String title, String startHour, String endHour, String place, String memo) {
+    public void insertUserBySQL(String date, String title, String startHour, String endHour, String place, String memo) {
         try {
             String sql = String.format (
                     "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (NULL, '%s', '%s', '%s', '%s', '%s', '%s')",
                     CalendarUserContract.Users.TABLE_NAME,
                     CalendarUserContract.Users._ID,
-                    CalendarUserContract.Users.KEY_NAME,
+                    CalendarUserContract.Users.KEY_DATE,
                     CalendarUserContract.Users.KEY_TITLE,
-                    CalendarUserContract.Users.KEY_STARTHOUR,
-                    CalendarUserContract.Users.KEY_ENDHOUR,
+                    CalendarUserContract.Users.KEY_STARTTIME,
+                    CalendarUserContract.Users.KEY_ENDTIME,
                     CalendarUserContract.Users.KEY_PLACE,
                     CalendarUserContract.Users.KEY_MEMO,
-                    name, title, startHour, endHour, place, memo);
+                    date, title, startHour, endHour, place, memo);
 
             getWritableDatabase().execSQL(sql);
         } catch (SQLException e) {
@@ -53,23 +53,18 @@ public class CalendarDBHelper extends SQLiteOpenHelper {
         return getReadableDatabase().rawQuery(sql,null);
     }
 
-    public void deleteUserBySQL(String name) {
+    public void deleteUserBySQL(String date) {
         try {
             String sql = String.format (
                     "DELETE FROM %s WHERE %s = %s",
                     CalendarUserContract.Users.TABLE_NAME,
-                    CalendarUserContract.Users.KEY_NAME,
-                    name);
+                    CalendarUserContract.Users.KEY_DATE,
+                    date);
             getWritableDatabase().execSQL(sql);
         } catch (SQLException e) {
             Log.e(TAG,"Error in deleting recodes");
         }
     }
 
-
-    public Cursor getAllUsersByMethod() {
-        SQLiteDatabase db = getReadableDatabase();
-        return db.query(CalendarUserContract.Users.TABLE_NAME,null,null,null,null,null,null);
-    }
 
 }

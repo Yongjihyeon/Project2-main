@@ -1,6 +1,7 @@
 package com.android.project2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -31,7 +32,7 @@ public class WeekFragment extends Fragment {
     private TextView block;
     //linearlayout내부의 textview를 선택하려면 block이 선택 되었을 때 선택된다.
     //다른 block을 선택하면 이전의 block은 다시 흰색이 되기 때문에 이전의 블록을 block변수에 저장
-
+    private Intent intent;
     public WeekFragment() {
     }
     @Override

@@ -14,20 +14,20 @@ public class CalendarUserContract {
     /* Inner class that defines the table contents */
     public static class Users implements BaseColumns {
         public static final String TABLE_NAME="Users";
-        public static final String KEY_NAME = "Name";
+        public static final String KEY_DATE = "Date";
         public static final String KEY_TITLE = "Title";
-        public static final String KEY_STARTHOUR = "StartTime";
-        public static final String KEY_ENDHOUR = "EndTime";
+        public static final String KEY_STARTTIME = "StartTime";
+        public static final String KEY_ENDTIME = "EndTime";
         public static final String KEY_PLACE = "Place";
         public static final String KEY_MEMO = "Memo";
 
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY" + COMMA_SEP +
-                KEY_NAME + TEXT_TYPE + COMMA_SEP +
+                KEY_DATE + TEXT_TYPE + COMMA_SEP +
                 KEY_TITLE + TEXT_TYPE + COMMA_SEP +
-                KEY_STARTHOUR + TEXT_TYPE + COMMA_SEP +
-                KEY_ENDHOUR + TEXT_TYPE + COMMA_SEP +
+                KEY_STARTTIME + TEXT_TYPE + COMMA_SEP +
+                KEY_ENDTIME + TEXT_TYPE + COMMA_SEP +
                 KEY_PLACE + TEXT_TYPE + COMMA_SEP +
                 KEY_MEMO + TEXT_TYPE +  " )";
         public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
